@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Beloslav13/cli-todo/internal/config"
+	"github.com/Beloslav13/cli-todo/internal/db"
 	"log/slog"
 	"os"
 )
@@ -15,10 +16,24 @@ const (
 func main() {
 	// init config
 	cfg := config.MustLoad[config.CLIConfig]()
-	// logger
+	// init logger
 	log := setupLogger(cfg.Base.Env)
 
 	log.Info("starting CLI", slog.String("env", cfg.Base.Env))
+
+	// init db
+	storage, err := db.NewDBPostgres()
+	if err != nil {
+		log.Error("failed to connect to database", "error", err.Error())
+		os.Exit(1)
+	}
+
+	log.Info("connected to database ok", slog.String("env", cfg.Base.Env))
+
+	if storage != nil {
+		log.Debug("storage conn info", slog.String("info", storage.ConnectionInfo()))
+	}
+
 	// init app
 	// start app
 
