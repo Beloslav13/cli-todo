@@ -19,10 +19,6 @@ func main() {
 	log := setupLogger(cfg.Base.Env)
 
 	log.Info("starting CLI", slog.String("env", cfg.Base.Env))
-	log.Debug("debug message", slog.String("env", cfg.Base.Env))
-	log.Warn("warning message", slog.String("env", cfg.Base.Env))
-	log.Error("error message", slog.String("env", cfg.Base.Env))
-
 	// init app
 	// start app
 

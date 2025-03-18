@@ -1,0 +1,36 @@
+services:
+  app:
+    build: .
+    container_name: cli-todo
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=cli_user
+      - DB_PASSWORD=cli_password
+      - DB_NAME=cli_db
+      - CONFIG_PATH=/app/config/cli.yaml # change
+    command:
+      - /bin/sh
+      - '-c'
+      - sleep 666d
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: db
+    environment:
+      POSTGRES_USER: cli_user
+      POSTGRES_PASSWORD: cli_password
+      POSTGRES_DB: cli_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
