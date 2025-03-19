@@ -4,7 +4,7 @@
 migrate: ```go run ./cmd/migrator/main.go --migrations-path=./migrations --rollback=false```
 
 
-Status Enum:
+Task status Enum:
 * new
 * in_progress
 * completed
@@ -12,4 +12,4 @@ Status Enum:
 
 commands:
 * Add task - add-task as (at): ```go run cmd/cli/main.go add-task --user_id=1 --name="Тестовый таск3" --status="in_progress"```
-* Add user - add-user as (au): ```go run cmd/cli/main.go add-task --username=bobra```
+* Add user - add-user as (au): ```go run cmd/cli/main.go add-user --username=bobra```
