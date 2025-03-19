@@ -27,7 +27,25 @@ func (db *Postgres) AddTask(task models.Task) (int64, error) {
 }
 
 func (db *Postgres) ListTasksByUser(userID int64) ([]models.Task, error) {
-	panic("implement me")
+	const op = "db.postgres.ListTasksByUser"
+	var tasks []models.Task
+
+	q := `SELECT id, name, status, created_at FROM tasks WHERE user_id = $1`
+
+	rows, err := db.conn.Query(q, userID)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var task models.Task
+		if err := rows.Scan(&task.ID, &task.Name, &task.Status, &task.CreatedAt); err != nil {
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		tasks = append(tasks, task)
+	}
+	return tasks, nil
 }
 
 func (db *Postgres) ListAllTasks() ([]models.Task, error) {
