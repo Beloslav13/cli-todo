@@ -15,7 +15,15 @@ type Postgres struct {
 // ================================Task implementation================================
 
 func (db *Postgres) AddTask(task models.Task) (int64, error) {
-	panic("implement me")
+	const op = "db.postgres.AddTask"
+	var id int64
+	q := `INSERT INTO tasks (user_id, name, status) VALUES ($1, $2, $3) RETURNING id`
+
+	err := db.conn.QueryRow(q, task.UserID, task.Name, task.Status).Scan(&id)
+	if err != nil {
+		return 0, fmt.Errorf("%s: %w", op, err)
+	}
+	return id, nil
 }
 
 func (db *Postgres) ListTasksByUser(userID int64) ([]models.Task, error) {
@@ -39,7 +47,16 @@ func (db *Postgres) DeleteTask(id int64) error {
 // ================================User implementation================================
 
 func (db *Postgres) AddUser(user models.User) (int64, error) {
-	panic("implement me")
+	const op = "db.postgres.AddUser"
+	var id int64
+	q := `INSERT INTO users (username) VALUES ($1) RETURNING id`
+
+	err := db.conn.QueryRow(q, user.Username).Scan(&id)
+	if err != nil {
+		return 0, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return id, nil
 }
 
 func (db *Postgres) ChangeUser(user models.User) error {

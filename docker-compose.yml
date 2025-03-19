@@ -22,7 +22,6 @@ services:
 
   db:
     image: postgres:15
-    container_name: db
     environment:
       - POSTGRES_USER=cli_user
       - POSTGRES_PASSWORD=cli_password
