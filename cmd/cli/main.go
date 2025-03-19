@@ -23,7 +23,7 @@ func main() {
 
 	// init db
 	path := db.StoragePath()
-	storage, err := db.New(path)
+	storage, err := db.New()
 	if err != nil {
 		log.Error("failed to connect to database", "error", err.Error())
 		os.Exit(1)
@@ -32,7 +32,7 @@ func main() {
 	log.Info("connected to database ok", slog.String("env", cfg.Base.Env))
 
 	if storage != nil {
-		log.Debug("storage conn info", slog.String("info", storage.ConnectionInfo()))
+		log.Debug("storage conn info", slog.String("info", path))
 	}
 
 	// init app

@@ -1,24 +1,11 @@
 package db
 
-import (
-	"fmt"
-	"os"
-)
+import "github.com/Beloslav13/cli-todo/internal/models"
 
 type Storage interface {
-	AddTask(name string) (int64, error)
-	ListTask() ([]string, error)
-	ChangeTask() error
-	DeleteTask() error
-	ConnectionInfo() string
-}
-
-func StoragePath() string {
-	path := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_NAME"))
-	return path
+	AddTask(name, status string) (int64, error)
+	ListTask() ([]models.Task, error)
+	ChangeTask(id int64, name, status *string) error
+	DeleteTask(id int64) error
+	Close() error
 }
