@@ -1,87 +1,12 @@
-package app
+package cli
 
 import (
 	"fmt"
-	"github.com/Beloslav13/cli-todo/internal/db"
 	"github.com/Beloslav13/cli-todo/internal/models"
 	"github.com/urfave/cli/v2"
 	"log/slog"
-	"os"
 	"strings"
 )
-
-type App struct {
-	log     *slog.Logger
-	storage db.Storage
-}
-
-func New(log *slog.Logger, storage db.Storage) *App {
-	return &App{
-		log:     log,
-		storage: storage,
-	}
-}
-
-func (app *App) Run() error {
-	cliApp := &cli.App{
-		Commands: []*cli.Command{
-			{
-				Name:    "add-task",
-				Aliases: []string{"at"},
-				Usage:   "add a task to the list",
-				Flags: []cli.Flag{
-					&cli.Int64Flag{
-						Name:     "user_id",
-						Usage:    "User ID for the task",
-						Required: true,
-					},
-					&cli.StringFlag{
-						Name:     "name",
-						Usage:    "Task name",
-						Required: true,
-					},
-					&cli.StringFlag{
-						Name:     "status",
-						Usage:    "Task status (new, in_progress, completed)",
-						Required: true,
-					},
-				},
-				Action: app.AddTask,
-			},
-			{
-				Name:    "add-user",
-				Aliases: []string{"au"},
-				Usage:   "add a user",
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:     "username",
-						Usage:    "Username",
-						Required: true,
-					},
-				},
-				Action: app.AddUser,
-			},
-			{
-				Name:    "task-list",
-				Aliases: []string{"tl"},
-				Usage:   "task list",
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:     "user_id",
-						Usage:    "List tasks by user_id",
-						Required: true,
-					},
-				},
-				Action: app.ListTasksByUser,
-			},
-		},
-	}
-
-	if err := cliApp.Run(os.Args); err != nil {
-		return err
-	}
-	return nil
-}
 
 func (app *App) AddTask(cCtx *cli.Context) error {
 	userID := cCtx.Int64("user_id")
