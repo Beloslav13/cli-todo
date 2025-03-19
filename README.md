@@ -26,8 +26,11 @@ OPTIONS **add**:
 
 OPTIONS **list**:
 * --user_id value  List tasks by user ID (default: 0)
+* --status value   Filter tasks by status (new, in_progress, completed)
+* --sort value     Sort tasks by id or created_at (default: "created_at")
+* --sort value     Sort tasks by id or created_at (default: "created_at")
 
-```go run cmd/cli/main.go task list --user_id=1```
+```go run cmd/cli/main.go task list --user_id=1 --status=new --sort=created_at --order=asc```
 
 команды для **user**:
 * add, a  Добавить пользователя
