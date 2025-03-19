@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/Beloslav13/cli-todo/internal/app"
 	"github.com/Beloslav13/cli-todo/internal/config"
 	"github.com/Beloslav13/cli-todo/internal/db"
 	"log/slog"
@@ -36,7 +37,17 @@ func main() {
 	}
 
 	// init app
+	cliApp := app.New(log, storage)
+	log.Info("initial app success", slog.String("env", cfg.Base.Env))
+
 	// start app
+	err = cliApp.Run()
+	if err != nil {
+		log.Error("app in main run error", err.Error())
+		os.Exit(1)
+	}
+	log.Info("command success", slog.String("env", cfg.Base.Env))
+	log.Info("stopping CLI", slog.String("env", cfg.Base.Env))
 
 }
 
