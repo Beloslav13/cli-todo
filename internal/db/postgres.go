@@ -12,25 +12,45 @@ type Postgres struct {
 	conn *sql.DB
 }
 
-func (db *Postgres) AddTask(name, status string) (int64, error) {
-	//TODO implement me
+// ================================Task implementation================================
+
+func (db *Postgres) AddTask(task models.Task) (int64, error) {
 	panic("implement me")
 }
 
-func (db *Postgres) ListTask() ([]models.Task, error) {
-	//TODO implement me
+func (db *Postgres) ListTasksByUser(userID int64) ([]models.Task, error) {
 	panic("implement me")
 }
 
-func (db *Postgres) ChangeTask(id int64, name, status *string) error {
-	//TODO implement me
+func (db *Postgres) ListAllTasks() ([]models.Task, error) {
+	panic("implement me")
+}
+
+func (db *Postgres) ChangeTask(task models.Task) error {
 	panic("implement me")
 }
 
 func (db *Postgres) DeleteTask(id int64) error {
-	//TODO implement me
 	panic("implement me")
 }
+
+// ================================Task implementation================================
+
+// ================================User implementation================================
+
+func (db *Postgres) AddUser(user models.User) (int64, error) {
+	panic("implement me")
+}
+
+func (db *Postgres) ChangeUser(user models.User) error {
+	panic("implement me")
+}
+
+func (db *Postgres) DeleteUser(id int64) error {
+	panic("implement me")
+}
+
+// ================================User implementation================================
 
 func (db *Postgres) Close() error {
 	return db.conn.Close()
