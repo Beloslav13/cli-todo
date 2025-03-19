@@ -30,8 +30,17 @@ func (app *App) AddTask(cCtx *cli.Context) error {
 
 func (app *App) ListTasksByUser(cCtx *cli.Context) error {
 	userID := cCtx.Int64("user_id")
+	status := cCtx.String("status")
+	sort := cCtx.String("sort")
+	order := cCtx.String("order")
 
-	tasks, err := app.storage.ListTasksByUser(userID)
+	filters := map[string]string{
+		"status": status,
+		"sort":   sort,
+		"order":  order,
+	}
+
+	tasks, err := app.storage.ListTasksByUser(userID, filters)
 	if err != nil {
 		return err
 	}

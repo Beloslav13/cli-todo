@@ -6,6 +6,7 @@ import (
 	"github.com/Beloslav13/cli-todo/internal/models"
 	_ "github.com/lib/pq"
 	"os"
+	"strings"
 )
 
 type Postgres struct {
@@ -26,18 +27,41 @@ func (db *Postgres) AddTask(task models.Task) (int64, error) {
 	return id, nil
 }
 
-func (db *Postgres) ListTasksByUser(userID int64) ([]models.Task, error) {
+func (db *Postgres) ListTasksByUser(userID int64, filters map[string]string) ([]models.Task, error) {
 	const op = "db.postgres.ListTasksByUser"
-	var tasks []models.Task
-
 	q := `SELECT id, name, status, created_at FROM tasks WHERE user_id = $1`
+	args := []interface{}{userID}
+	argIdx := 2
 
-	rows, err := db.conn.Query(q, userID)
+	// Применяем фильтр по статусу, если передан
+	if status, ok := filters["status"]; ok && status != "" {
+		q += fmt.Sprintf(" AND status = $%d", argIdx)
+		args = append(args, status)
+		argIdx++
+	}
+
+	// Проверяем корректность сортировки
+	sort := filters["sort"]
+	sortColumns := map[string]bool{"id": true, "created_at": true}
+	if !sortColumns[sort] {
+		sort = "created_at"
+	}
+
+	// Проверяем корректность порядка сортировки
+	order := strings.ToUpper(filters["order"])
+	if order != "ASC" && order != "DESC" {
+		order = "DESC"
+	}
+
+	q += fmt.Sprintf(" ORDER BY %s %s", sort, order)
+
+	rows, err := db.conn.Query(q, args...)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 	defer rows.Close()
 
+	var tasks []models.Task
 	for rows.Next() {
 		var task models.Task
 		if err := rows.Scan(&task.ID, &task.Name, &task.Status, &task.CreatedAt); err != nil {

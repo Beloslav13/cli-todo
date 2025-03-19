@@ -13,6 +13,9 @@ func taskFlags() []cli.Flag {
 func listTaskFlags() []cli.Flag {
 	return []cli.Flag{
 		&cli.Int64Flag{Name: "user_id", Usage: "List tasks by user ID", Required: true},
+		&cli.StringFlag{Name: "status", Usage: "Filter tasks by status (new, in_progress, completed)", Required: false},
+		&cli.StringFlag{Name: "sort", Usage: "Sort tasks by id or created_at", Value: "created_at"},
+		&cli.StringFlag{Name: "order", Usage: "Sort order (asc, desc)", Value: "desc"},
 	}
 }
 
