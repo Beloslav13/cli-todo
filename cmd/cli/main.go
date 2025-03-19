@@ -22,7 +22,8 @@ func main() {
 	log.Info("starting CLI", slog.String("env", cfg.Base.Env))
 
 	// init db
-	storage, err := db.NewDBPostgres()
+	path := db.StoragePath()
+	storage, err := db.New(path)
 	if err != nil {
 		log.Error("failed to connect to database", "error", err.Error())
 		os.Exit(1)

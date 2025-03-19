@@ -40,16 +40,9 @@ func (db Postgres) ConnectionInfo() string {
 		os.Getenv("DB_NAME"))
 }
 
-// NewDBPostgres создаёт подключение к базе данных и возвращает интерфейс Storage
-func NewDBPostgres() (Storage, error) {
-	connStr := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_NAME"))
-
-	db, err := sql.Open("postgres", connStr)
+// New создаёт подключение к базе данных и возвращает интерфейс Storage
+func New(path string) (Storage, error) {
+	db, err := sql.Open("postgres", path)
 	if err != nil {
 		return nil, err
 	}
@@ -60,4 +53,8 @@ func NewDBPostgres() (Storage, error) {
 	}
 
 	return &Postgres{conn: db}, nil
+}
+
+func (db Postgres) Close() error {
+	return db.conn.Close()
 }
