@@ -19,6 +19,12 @@ func listTaskFlags() []cli.Flag {
 	}
 }
 
+func ListAllTasksFlags() []cli.Flag {
+	return []cli.Flag{
+		&cli.StringFlag{Name: "status", Usage: "Filter tasks by status (new, in_progress, completed)", Required: false},
+	}
+}
+
 func userFlags() []cli.Flag {
 	return []cli.Flag{
 		&cli.StringFlag{Name: "username", Usage: "Username", Required: true},

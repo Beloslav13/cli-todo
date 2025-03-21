@@ -11,7 +11,7 @@ type Storage interface {
 type TaskStorage interface {
 	AddTask(task models.Task) (int64, error)
 	ListTasksByUser(userID int64, filters map[string]string) ([]models.Task, error)
-	ListAllTasks() ([]models.Task, error) // Для админов
+	ListAllTasks(filters map[string]string) (map[string][]models.TaskWithUser, error) // Для админов
 	ChangeTask(task models.Task) error
 	DeleteTask(id int64) error
 }

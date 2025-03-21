@@ -72,8 +72,39 @@ func (db *Postgres) ListTasksByUser(userID int64, filters map[string]string) ([]
 	return tasks, nil
 }
 
-func (db *Postgres) ListAllTasks() ([]models.Task, error) {
-	panic("implement me")
+func (db *Postgres) ListAllTasks(filters map[string]string) (map[string][]models.TaskWithUser, error) {
+	const op = "db.postgres.ListAllTasks"
+	q := `SELECT t.id, t.name, t.status, t.created_at, u.id, u.username FROM tasks as t
+    INNER JOIN users as u ON t.user_id = u.id`
+
+	var args []interface{}
+	argIdx := 1
+
+	// Применяем фильтр по статусу, если передан
+	if status, ok := filters["status"]; ok && status != "" {
+		q += fmt.Sprintf(" WHERE status = $%d", argIdx)
+		args = append(args, status)
+		argIdx++
+	}
+
+	rows, err := db.conn.Query(q, args...)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	defer rows.Close()
+
+	userTasks := make(map[string][]models.TaskWithUser)
+	for rows.Next() {
+		var task models.TaskWithUser
+		var username string
+		var userId int64
+		if err := rows.Scan(&task.ID, &task.Name, &task.Status, &task.CreatedAt, &userId, &username); err != nil {
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		task.User = &models.User{Username: username}
+		userTasks[username] = append(userTasks[username], task)
+	}
+	return userTasks, nil
 }
 
 func (db *Postgres) ChangeTask(task models.Task) error {

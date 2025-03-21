@@ -76,6 +76,39 @@ func (app *App) ListTasksByUser(cCtx *cli.Context) error {
 	return nil
 }
 
+func (app *App) ListAllTasks(cCtx *cli.Context) error {
+	status := cCtx.String("status")
+
+	fmt.Println(status)
+
+	filters := map[string]string{
+		"status": status,
+	}
+
+	userTasks, err := app.storage.ListAllTasks(filters)
+	if err != nil {
+		return err
+	}
+
+	for username, tasks := range userTasks {
+		var sb strings.Builder
+		sb.WriteString(fmt.Sprintf("Задачи пользователя %s:\n", username))
+		for i, task := range tasks {
+			createdAtFormatted := task.CreatedAt.Format("02 Jan 2006 15:04")
+
+			sb.WriteString(fmt.Sprintf("\n--------------- Задача %d ---------------\n", i+1))
+			sb.WriteString(fmt.Sprintf("Идентификатор: %d\n", task.ID))
+			sb.WriteString(fmt.Sprintf("Наименование: %s\n", task.Name))
+			sb.WriteString(fmt.Sprintf("Статус: %s\n", task.Status))
+			sb.WriteString(fmt.Sprintf("Создана: %s\n", createdAtFormatted))
+			sb.WriteString(fmt.Sprintf("--------------- Задача %d ---------------\n", i+1))
+		}
+		fmt.Println(sb.String())
+	}
+
+	return nil
+}
+
 func (app *App) AddUser(cCtx *cli.Context) error {
 	username := cCtx.String("username")
 

@@ -23,6 +23,13 @@ func taskCommand(app *App) *cli.Command {
 				Flags:   listTaskFlags(),
 				Action:  app.ListTasksByUser,
 			},
+			{
+				Name:    "alist",
+				Aliases: []string{"al"},
+				Usage:   "All list tasks",
+				Flags:   ListAllTasksFlags(),
+				Action:  app.ListAllTasks,
+			},
 		},
 	}
 }

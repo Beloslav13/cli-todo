@@ -31,10 +31,7 @@ func main() {
 	}
 
 	log.Info("connected to database ok", slog.String("env", cfg.Base.Env))
-
-	if storage != nil {
-		log.Debug("storage conn info", slog.String("info", path))
-	}
+	log.Debug("connected storage info", slog.String("info", path))
 
 	// init app
 	cliApp := cli.New(log, storage)
